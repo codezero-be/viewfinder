@@ -1,6 +1,7 @@
 {
     "name": "codezero/viewfinder",
     "description": "Localized view finder for Laravel",
+    "license": "MIT",
     "authors": [
         {
             "name": "Ivan Vermeyen",
