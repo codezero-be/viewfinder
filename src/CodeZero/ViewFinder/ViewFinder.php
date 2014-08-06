@@ -13,4 +13,14 @@ interface ViewFinder {
      */
     public function make($view, $data = array(), $mergeData = array());
 
+    /**
+     * Get the best match for a localized version of a view
+     *
+     * @param $view
+     *
+     * @return string
+     * @throws ViewNotFoundException
+     */
+    public function getLocalizedViewName($view);
+
 }

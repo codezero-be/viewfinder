@@ -19,6 +19,12 @@ class LaravelViewFinder implements ViewFinder {
      */
     private $viewFactory;
 
+    /**
+     * Constructor
+     *
+     * @param ViewFactory $viewFactory
+     * @param Config $config
+     */
     public function __construct(ViewFactory $viewFactory, Config $config)
     {
         $this->config = $config;
@@ -33,11 +39,29 @@ class LaravelViewFinder implements ViewFinder {
      * @param array $mergeData
      *
      * @return \Illuminate\View\View
-     * @throws ViewNotFoundException
      */
     public function make($view, $data = array(), $mergeData = array())
     {
-        $views = $this->getLocalizedViewNames($view);
+        $view = $this->getLocalizedViewName($view);
+
+        return $this->viewFactory->make($view, $data, $mergeData);
+    }
+
+    /**
+     * Get the best match for a localized version of a view
+     *
+     * @param $view
+     *
+     * @return string
+     * @throws ViewNotFoundException
+     */
+    public function getLocalizedViewName($view)
+    {
+        $views = [
+            $view,
+            $this->config->get('app.locale') . '.' . $view,
+            $this->config->get('app.fallback_locale') . '.' . $view
+        ];
 
         // Loop through possible view locations
         // and return the first existing match
@@ -45,29 +69,12 @@ class LaravelViewFinder implements ViewFinder {
         {
             if ($this->viewExists($view))
             {
-                return $this->viewFactory->make($view, $data, $mergeData);
+                return $view;
             }
         }
 
         // Bummer, the requested view is nowhere to be found!
         throw new ViewNotFoundException("View [$view] not found.");
-    }
-
-    /**
-     * Generate an array with localized versions
-     * of a view in order of preference
-     *
-     * @param $view
-     *
-     * @return array
-     */
-    private function getLocalizedViewNames($view)
-    {
-        return [
-            $view,
-            $this->config->get('app.locale') . '.' . $view,
-            $this->config->get('app.fallback_locale') . '.' . $view
-        ];
     }
 
     /**
