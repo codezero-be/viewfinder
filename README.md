@@ -1,7 +1,5 @@
 # Laravel 4 Localized View Finder #
 
-----------
-
 This package provides a convenient way to automatically find a localized version of a view.
 
 ## The Problem ##
