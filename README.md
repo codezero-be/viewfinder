@@ -1,5 +1,10 @@
 # Laravel 4 Localized View Finder #
 
+[![Build Status](https://travis-ci.org/codezero-be/viewfinder.svg?branch=master)](https://travis-ci.org/codezero-be/viewfinder)
+[![Latest Stable Version](https://poser.pugx.org/codezero/viewfinder/v/stable.svg)](https://packagist.org/packages/codezero/viewfinder)
+[![Total Downloads](https://poser.pugx.org/codezero/viewfinder/downloads.svg)](https://packagist.org/packages/codezero/viewfinder)
+[![License](https://poser.pugx.org/codezero/viewfinder/license.svg)](https://packagist.org/packages/codezero/viewfinder)
+
 This package provides a convenient way to automatically find a localized version of a view.
 
 ## The Problem ##
