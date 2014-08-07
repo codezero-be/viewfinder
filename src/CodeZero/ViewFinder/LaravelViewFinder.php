@@ -57,24 +57,38 @@ class LaravelViewFinder implements ViewFinder {
      */
     public function getLocalizedViewName($view)
     {
-        $views = [
-            $view,
-            $this->config->get('app.locale') . '.' . $view,
-            $this->config->get('app.fallback_locale') . '.' . $view
-        ];
+        $views = $this->listPossibleViewNames($view);
 
         // Loop through possible view locations
         // and return the first existing match
-        foreach ($views as $view)
+        foreach ($views as $v)
         {
-            if ($this->viewExists($view))
+            if ($this->viewExists($v))
             {
-                return $view;
+                return $v;
             }
         }
 
         // Bummer, the requested view is nowhere to be found!
         throw new ViewNotFoundException("View [$view] not found.");
+    }
+
+    /**
+     * List the possible localized names of the view
+     * based on the locale settings in Laravel's
+     * configuration file
+     *
+     * @param $view
+     *
+     * @return array
+     */
+    private function listPossibleViewNames($view)
+    {
+        return [
+            $view,
+            $this->config->get('app.locale') . '.' . $view,
+            $this->config->get('app.fallback_locale') . '.' . $view
+        ];
     }
 
     /**
