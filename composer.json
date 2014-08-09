@@ -1,6 +1,13 @@
 {
     "name": "codezero/viewfinder",
-    "description": "Localized view finder for Laravel",
+    "description": "Find and return a view in different subfolders.",
+    "keywords": [
+        "find",
+        "locate",
+        "localize",
+        "view",
+        "laravel"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -9,9 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "illuminate/config": "4.2.*",
-        "illuminate/view": "4.2.*"
+        "php": ">=5.4.0"
     },
     "require-dev": {
         "phpspec/phpspec": "~2.0"
