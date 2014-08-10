@@ -28,9 +28,7 @@ After installing, update your `app/config/app.php` file to include a reference t
 	    'CodeZero\ViewFinder\ViewFinderServiceProvider'
     ]
 
-This package will automatically register the `ViewFinder` alias, if this is not already taken. You may also set it yourself, or choose another name for the alias. Just add it to the aliases array in `app/config/app.php`:
-
-	'ViewFinder' => 'CodeZero\ViewFinder\Facade\ViewFinder'
+This package will automatically register the `ViewFinder` alias, if this is not already taken.
 
 ### Laravel Specific Usage ###
 
