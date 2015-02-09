@@ -22,8 +22,8 @@
         "phpspec/phpspec": "~2.0"
     },
     "autoload": {
-        "psr-0": {
-            "CodeZero\\ViewFinder": "src/"
+        "psr-4": {
+            "CodeZero\\ViewFinder\\": "src/"
         }
     },
     "minimum-stability": "stable"
