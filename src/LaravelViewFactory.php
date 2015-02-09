@@ -1,20 +1,20 @@
 <?php namespace CodeZero\ViewFinder;
 
-use Illuminate\View\Factory as IlluminateViewFactory;
+use Illuminate\Contracts\View\Factory as IlluminateViewFactory;
 
 class LaravelViewFactory implements ViewFactory {
 
     /**
      * Laravel View Factory
      *
-     * @var ViewFactory
+     * @var IlluminateViewFactory
      */
     private $viewFactory;
 
     /**
      * Constructor
      *
-     * @param ViewFactory $viewFactory
+     * @param IlluminateViewFactory $viewFactory
      */
     public function __construct(IlluminateViewFactory $viewFactory)
     {
@@ -24,13 +24,13 @@ class LaravelViewFactory implements ViewFactory {
     /**
      * Make a view
      *
-     * @param $view
+     * @param string $view
      * @param array $data
      * @param array $mergeData
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Contracts\View\View
      */
-    public function make($view, $data = array(), $mergeData = array())
+    public function make($view, array $data = [], array $mergeData = [])
     {
         return $this->viewFactory->make($view, $data, $mergeData);
     }
@@ -38,7 +38,7 @@ class LaravelViewFactory implements ViewFactory {
     /**
      * Check if a view exists
      *
-     * @param $view
+     * @param string $view
      *
      * @return bool
      */

@@ -5,18 +5,18 @@ interface ViewFactory {
     /**
      * Make a view
      *
-     * @param $view
+     * @param string $view
      * @param array $data
      * @param array $mergeData
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\View\View
      */
-    public function make($view, $data = array(), $mergeData = array());
+    public function make($view, array $data = [], array $mergeData = []);
 
     /**
      * Check if a view exists
      *
-     * @param $view
+     * @param string $view
      *
      * @return bool
      */
