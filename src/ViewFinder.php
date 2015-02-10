@@ -1,40 +1,6 @@
 <?php namespace CodeZero\ViewFinder;
 
-class ViewFinder {
-
-    /**
-     * View Factory
-     *
-     * @var ViewFactory
-     */
-    private $viewFactory;
-
-    /**
-     * View Prefixes
-     *
-     * @var array
-     */
-    private $prefixes;
-
-    /**
-     * View Divider
-     *
-     * @var string
-     */
-    private $divider;
-
-    /**
-     * Constructor
-     *
-     * @param ViewFactory $viewFactory
-     * @param array $prefixes
-     */
-    public function __construct(ViewFactory $viewFactory, array $prefixes, $divider = '.')
-    {
-        $this->viewFactory = $viewFactory;
-        $this->prefixes = $prefixes;
-        $this->divider = $divider;
-    }
+interface ViewFinder {
 
     /**
      * Find and make a view
@@ -42,77 +8,12 @@ class ViewFinder {
      * @param string $view
      * @param array $data
      * @param array $mergeData
+     * @param array $prefixes
+     * @param string $divider
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\View\View
      * @throws ViewNotFoundException
      */
-    public function make($view, $data = array(), $mergeData = array(), array $prefixes = null)
-    {
-        $view = $this->findMatchingViewName($view, $prefixes);
+    public function make($view, array $data = [], array $mergeData = [], array $prefixes = [], $divider = '.');
 
-        return $this->viewFactory->make($view, $data, $mergeData);
-    }
-
-    /**
-     * Get the best match for a view, with or without prefix
-     *
-     * @param string $view
-     * @param array $prefixes
-     *
-     * @return string
-     * @throws ViewNotFoundException
-     */
-    public function findMatchingViewName($view, array $prefixes = null)
-    {
-        $views = $this->listPossibleViewNames($view, $prefixes);
-
-        // Loop through possible view locations
-        // and return the first existing match
-        foreach ($views as $v)
-        {
-            if ($this->viewExists($v))
-            {
-                return $v;
-            }
-        }
-
-        // Bummer, the requested view is nowhere to be found!
-        throw new ViewNotFoundException("View [$view] not found.");
-    }
-
-    /**
-     * List the possible view names by prepending each prefix
-     *
-     * @param string $view
-     * @param array $prefixes
-     *
-     * @return array
-     */
-    public function listPossibleViewNames($view, array $prefixes = null, $divider = null)
-    {
-        $prefixes = $prefixes ?: $this->prefixes;
-        $divider = $divider ?: $this->divider;
-
-        $views = [$view];
-
-        foreach ($prefixes as $prefix)
-        {
-            $views[] = $prefix . $divider . $view;
-        }
-
-        return $views;
-    }
-
-    /**
-     * Check if a view exists
-     *
-     * @param string $view
-     *
-     * @return bool
-     */
-    public function viewExists($view)
-    {
-        return $this->viewFactory->exists($view);
-    }
-
-} 
+}
