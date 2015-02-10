@@ -1,7 +1,5 @@
 <?php namespace CodeZero\ViewFinder;
 
-use Config;
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class ViewFinderServiceProvider extends ServiceProvider {
@@ -13,7 +11,9 @@ class ViewFinderServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->package('codezero/viewfinder');
+        $this->publishes([
+            __DIR__.'/config/config.php' => config_path('viewfinder.php'),
+        ]);
     }
 
     /**
@@ -24,26 +24,15 @@ class ViewFinderServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->registerViewFactory();
-
         $this->registerViewFinder();
-
+        $this->registerDefaultViewFinder();
         $this->registerViewFinderFacade();
-
-        $this->registerViewFinderAlias();
     }
 
     /**
-     * Get the services provided by the provider.
+     * Register the ViewFactory binding.
      *
-     * @return array
-     */
-    public function provides()
-    {
-        return ['viewfinder'];
-    }
-
-    /**
-     * Register the ViewFactory binding
+     * @return void
      */
     private function registerViewFactory()
     {
@@ -54,23 +43,39 @@ class ViewFinderServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the ViewFinder binding
+     * Register the ViewFinder binding.
+     *
+     * @return void
      */
     private function registerViewFinder()
     {
+        $this->app->bind(
+            'CodeZero\ViewFinder\ViewFinder',
+            'CodeZero\ViewFinder\DefaultViewFinder'
+        );
+    }
+
+    /**
+     * Register the ViewFinder binding.
+     *
+     * @return void
+     */
+    private function registerDefaultViewFinder()
+    {
         $this->app->bind('CodeZero\ViewFinder\ViewFinder', function($app)
         {
-            $divider = $app['config']->get('viewfinder::config.divider');
             $prefixes = $this->getPrefixes($app);
 
             $viewFactory = $this->app->make('CodeZero\ViewFinder\ViewFactory');
 
-            return new ViewFinder($viewFactory, $prefixes, $divider);
+            return new DefaultViewFinder($viewFactory, $prefixes);
         });
     }
 
     /**
-     * Hook up the ViewFinder class for the ViewFinder alias
+     * Hook up the ViewFinder class with its facade key.
+     *
+     * @return void
      */
     private function registerViewFinderFacade()
     {
@@ -81,46 +86,30 @@ class ViewFinderServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the ViewFinder alias if it does not already exist
-     */
-    private function registerViewFinderAlias()
-    {
-        $this->app->booting(function()
-        {
-            $aliases = Config::get('app.aliases');
-
-            if (empty($aliases['ViewFinder']))
-            {
-                AliasLoader::getInstance()->alias(
-                    'ViewFinder',
-                    'CodeZero\ViewFinder\Facade\ViewFinder'
-                );
-            }
-        });
-    }
-
-    /**
-     * Get the prefixes from the config file
+     * Get the prefixes from the config file.
+     *
+     * @param $app
+     *
+     * @return array
      */
     private function getPrefixes($app)
     {
-        $config = $app['config'];
+        $config = $app['config']->has("viewfinder")
+            ? $app['config']->get("viewfinder")
+            : include __DIR__ . '/config/config.php';
 
-        // Get the prefixes with highest priority
-        $primary = $config->get('viewfinder::config.primary');
-        $fallback = $config->get('viewfinder::config.fallback');
-
-        // Get a list of all prefixes
-        $prefixes = $config->get('viewfinder::config.prefixes');
+        $primaryPrefix = $config['primaryPrefix'];
+        $fallbackPrefix = $config['fallbackPrefix'];
+        $additionalPrefixes = $config['prefixes'];
 
         // Remove the current and fallback locale from the main list
-        $prefixes = array_filter($prefixes, function($val) use ($primary, $fallback)
+        $prefixes = array_filter($additionalPrefixes, function($val) use ($primaryPrefix, $fallbackPrefix)
         {
-            return $val != $primary and $val != $fallback;
+            return $val != $primaryPrefix and $val != $fallbackPrefix;
         });
 
         // Put the primary and fallback locale first in the array
-        array_unshift($prefixes, $primary, $fallback);
+        array_unshift($prefixes, $primaryPrefix, $fallbackPrefix);
 
         return $prefixes;
     }
