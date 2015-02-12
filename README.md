@@ -151,6 +151,10 @@ ViewFinder will search in the views folder in the following order:
 
 If a localized route is registered but the view can't be found, a `CodeZero\ViewFinder\ViewNotFoundException` will be thrown. If a localized route is not registered, Laravel will throw a normal 404 error.
 
+### One Master View
+
+If you load views in a fallback locale then it is probably a good idea to let all of your pages extend one site-wide master view that you translate with Laravel's localization feature (see below). This way, your visitors can still navigate in the requested language and only the actual content is in the fallback language.
+
 ## Laravel's Localization
 
 Our `users.create` view from the example has a localized route (`example.com/en/users/create`) but not a localized view. ViewFinder will first check if an unprefixed version of the requested view exists and load it.
