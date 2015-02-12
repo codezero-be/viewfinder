@@ -24,8 +24,9 @@ class ViewFinderServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->registerViewFactory();
+        $this->registerLocalizer();
+        $this->registerLaravelLocalizer();
         $this->registerViewFinder();
-        $this->registerDefaultViewFinder();
         $this->registerViewFinderFacade();
     }
 
@@ -36,10 +37,45 @@ class ViewFinderServiceProvider extends ServiceProvider {
      */
     private function registerViewFactory()
     {
-        $this->app->bind(
+        $this->app->singleton(
             'CodeZero\ViewFinder\ViewFactory',
             'CodeZero\ViewFinder\LaravelViewFactory'
         );
+    }
+
+    /**
+     * Register the Localizer binding.
+     *
+     * @return void
+     */
+    private function registerLocalizer()
+    {
+        $this->app->singleton(
+            'CodeZero\ViewFinder\Localizer',
+            'CodeZero\ViewFinder\LaravelLocalizer'
+        );
+    }
+
+    /**
+     * Register the LaravelLocalizer binding.
+     *
+     * @return void
+     */
+    private function registerLaravelLocalizer()
+    {
+        $this->app->singleton('CodeZero\ViewFinder\LaravelLocalizer', function($app)
+        {
+            $config = $app['config']->has("viewfinder")
+                ? $app['config']->get("viewfinder")
+                : include __DIR__ . '/config/config.php';
+
+            $locales = $config['locales'];
+            $phpLocaleCategory = $config['phpLocaleCategory'];
+            $translator = $app->make('Illuminate\Translation\Translator');
+            $request = $app->make('Illuminate\Http\Request');;
+
+            return new LaravelLocalizer($locales, $phpLocaleCategory, $translator, $request);
+        });
     }
 
     /**
@@ -49,27 +85,10 @@ class ViewFinderServiceProvider extends ServiceProvider {
      */
     private function registerViewFinder()
     {
-        $this->app->bind(
+        $this->app->singleton(
             'CodeZero\ViewFinder\ViewFinder',
-            'CodeZero\ViewFinder\DefaultViewFinder'
+            'CodeZero\ViewFinder\LaravelViewFinder'
         );
-    }
-
-    /**
-     * Register the ViewFinder binding.
-     *
-     * @return void
-     */
-    private function registerDefaultViewFinder()
-    {
-        $this->app->bind('CodeZero\ViewFinder\ViewFinder', function($app)
-        {
-            $prefixes = $this->getPrefixes($app);
-
-            $viewFactory = $this->app->make('CodeZero\ViewFinder\ViewFactory');
-
-            return new DefaultViewFinder($viewFactory, $prefixes);
-        });
     }
 
     /**
@@ -79,39 +98,10 @@ class ViewFinderServiceProvider extends ServiceProvider {
      */
     private function registerViewFinderFacade()
     {
-        $this->app->bindShared('viewfinder', function()
+        $this->app->singleton('viewfinder', function()
         {
             return $this->app->make('CodeZero\ViewFinder\ViewFinder');
         });
-    }
-
-    /**
-     * Get the prefixes from the config file.
-     *
-     * @param $app
-     *
-     * @return array
-     */
-    private function getPrefixes($app)
-    {
-        $config = $app['config']->has("viewfinder")
-            ? $app['config']->get("viewfinder")
-            : include __DIR__ . '/config/config.php';
-
-        $primaryPrefix = $config['primaryPrefix'];
-        $fallbackPrefix = $config['fallbackPrefix'];
-        $additionalPrefixes = $config['prefixes'];
-
-        // Remove the current and fallback locale from the main list
-        $prefixes = array_filter($additionalPrefixes, function($val) use ($primaryPrefix, $fallbackPrefix)
-        {
-            return $val != $primaryPrefix and $val != $fallbackPrefix;
-        });
-
-        // Put the primary and fallback locale first in the array
-        array_unshift($prefixes, $primaryPrefix, $fallbackPrefix);
-
-        return $prefixes;
     }
 
 } 

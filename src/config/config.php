@@ -3,36 +3,32 @@
 return [
 
     /**
-     * Primary Prefix/Locale
+     * PHP Locale Category
      *
-     * This prefix will be prepended to the view name
-     * and will be searched for first.
+     * @link http://php.net/setlocale
+     * @link http://php.net/manual/en/function.strftime.php
+     *
+     * This will allow for automatic translation
+     * of the PHP strftime() output etc.
      */
-    'primaryPrefix' => Config::get('app.locale'),
+    'phpLocaleCategory' => LC_ALL,
 
     /**
-     * Fallback Prefix/Locale
+     * List of Locales
      *
-     * This prefix will be prepended to the view name
-     * and will be searched for when the view is not
-     * found in the primary location.
+     * These locale keys will be used as prefixes to search for views.
+     * and to set Laravel's locale and fallback_locale settings.
+     * The locales array values will be used to set the PHP locale.
+     * To see the available locales on your server run "locale -a".
+     *
+     * @link http://php.net/setlocale
+     *
+     * You can publish this config file and edit it or add an array
+     * directly to Laravel's config/app.php file:
+     * 'locales' => ['nl' => 'nl_BE.utf8', 'en' => 'en_US.utf8', 'fr' => 'fr_FR.utf8'],
      */
-    'fallbackPrefix' => Config::get('app.fallback_locale'),
-
-    /**
-     * List of Prefixes/Locales
-     *
-     * If a view isn't found in the primary or fallback location,
-     * these prefixes will be used to continue the search.
-     *
-     * If you want, you can add an array to the main config/app.php file:
-     * 'locales' => ['nl' => 'Dutch', 'en' => 'English', 'fr' => 'French'],
-     *
-     * This way, you can also use these locale values for PHP's localization:
-     * setlocale(LC_ALL, $locales[$locale]);
-     *
-     * You may include the primary and fallback locale in this array.
-     */
-    'prefixes' => Config::has('app.locales') ? array_keys(Config::get('app.locales')) : [],
+    'locales' => Config::has('app.locales')
+        ? Config::get('app.locales')
+        : ['en' => 'en_US.utf8'],
 
 ];
