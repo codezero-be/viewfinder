@@ -5,9 +5,10 @@ interface ViewFinder {
     /**
      * Register Localized Routes
      *
-     * @param $closure
+     * @param array|callable $options
+     * @param callable $closure
      */
-    public function routes($closure);
+    public function routes($options, $closure = null);
 
     /**
      * Find and make a view
@@ -15,11 +16,11 @@ interface ViewFinder {
      * @param string $view
      * @param array $data
      * @param array $mergeData
+     * @param bool $skipFallback
      * @param string $divider
      *
      * @return \Illuminate\Contracts\View\View
-     * @throws ViewNotFoundException
      */
-    public function make($view, array $data = [], array $mergeData = [], $divider = '.');
+    public function make($view, array $data = [], array $mergeData = [], $skipFallback = false, $divider = '.');
 
 }

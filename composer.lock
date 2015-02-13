@@ -172,16 +172,16 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v5.0.0",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
-                "reference": "9b6c0e2e40d47f2018f7763fef2199d78524aec1"
+                "reference": "aa3a339f5e4f6505a74f68a77be57b43c2832252"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/9b6c0e2e40d47f2018f7763fef2199d78524aec1",
-                "reference": "9b6c0e2e40d47f2018f7763fef2199d78524aec1",
+                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/aa3a339f5e4f6505a74f68a77be57b43c2832252",
+                "reference": "aa3a339f5e4f6505a74f68a77be57b43c2832252",
                 "shasum": ""
             },
             "require": {
@@ -217,11 +217,11 @@
                 }
             ],
             "description": "The Illuminate Filesystem package.",
-            "time": "2015-01-26 16:36:24"
+            "time": "2015-02-10 14:19:20"
         },
         {
             "name": "illuminate/http",
-            "version": "v5.0.0",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/http.git",
@@ -266,16 +266,16 @@
         },
         {
             "name": "illuminate/session",
-            "version": "v5.0.0",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
-                "reference": "91952f027f90866717d162ea28de52440e217f90"
+                "reference": "ed488eae9db18fa24b2f183648ccce3378cfb060"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/session/zipball/91952f027f90866717d162ea28de52440e217f90",
-                "reference": "91952f027f90866717d162ea28de52440e217f90",
+                "url": "https://api.github.com/repos/illuminate/session/zipball/ed488eae9db18fa24b2f183648ccce3378cfb060",
+                "reference": "ed488eae9db18fa24b2f183648ccce3378cfb060",
                 "shasum": ""
             },
             "require": {
@@ -311,20 +311,20 @@
                 }
             ],
             "description": "The Illuminate Session package.",
-            "time": "2015-01-25 15:19:59"
+            "time": "2015-02-06 23:14:12"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.0.0",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "306ceb305f5b480608d94355ac3a0a730b21a905"
+                "reference": "405a2241fefa49cfc39b7fba8cc54f69fce2f101"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/306ceb305f5b480608d94355ac3a0a730b21a905",
-                "reference": "306ceb305f5b480608d94355ac3a0a730b21a905",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/405a2241fefa49cfc39b7fba8cc54f69fce2f101",
+                "reference": "405a2241fefa49cfc39b7fba8cc54f69fce2f101",
                 "shasum": ""
             },
             "require": {
@@ -362,11 +362,11 @@
                 }
             ],
             "description": "The Illuminate Support package.",
-            "time": "2015-02-03 22:40:35"
+            "time": "2015-02-11 11:08:03"
         },
         {
             "name": "illuminate/translation",
-            "version": "v5.0.0",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/translation.git",

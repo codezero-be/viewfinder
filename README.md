@@ -7,8 +7,6 @@
 
 This package allows you to easily create [route structures](#localized-routing) for a multi language site. It also provides a convenient way to automatically find and return a [localized version](#load-a-view) of a view.
 
-If you request `some.view`, ViewFinder will search for that view. If it can't find it it will try to prepend the [configured locales](#configuration) (`en.some.view`) and return the first match as a fallback. If no matching view exists, a `ViewNotFoundException` will be thrown.
-
 ## Installation
 
 Install this package through Composer:
@@ -72,7 +70,7 @@ So your views folder might look like this:
 
 This package will assume that your localized routes will have the 2-letter `locale` as the first URL segment: `example.com/en/about`.
 
-The following examples will make each route available for the requested locale if that locale is in your configuration array. This way, each locale will have the same route structure.
+The routes that you register with ViewFinder will be automatically registered with the requested locale as a prefix, but only if that locale is in your configuration array. So each locale will have the same route structure.
 
 - example.com/en/about
 - example.com/en/new
@@ -111,7 +109,11 @@ Inside the closure, you can add your routes as usual:
     
         Route::resource('users', 'UsersController', [
             'names' => [
-                // Avoid the route prefix in the route name...
+                // Resources get route names automatically,
+                // but they will have the route prefix:
+                // [en.users.create] etc.
+                // Avoid the route prefix in the route names
+                // by explicitly naming them...
                 'create'  => 'users.create',
                 'store'   => 'users.store',
                 'show'    => 'users.show',
@@ -139,27 +141,54 @@ You can also define routes outside of `ViewFinder::make()` that are not localize
 
 In your controller, use `ViewFinder::make` as you would Laravel's `View::make`, but exclude any locale prefixes from the view name.
 
-    return ViewFinder::make('some.view');
+    return ViewFinder::make('some.view', compact($data));
+    return ViewFinder::make('some.view')->with('data', $data);
 
 ### Search Order
 
 ViewFinder will search in the views folder in the following order:
 
 - first it tries `some.view` (unprefixed)
-- if that fails, it prepends the current locale (ex. `nl.some.view`)
+- if that fails, it prepends the requested locale (ex. `nl.some.view`)
 - if that fails, it tries each of the the fallback locales from your `locales` array (ex. `en.some.view`, `fr.some.view`, ...) until a match is found.
 
 If a localized route is registered but the view can't be found, a `CodeZero\ViewFinder\ViewNotFoundException` will be thrown. If a localized route is not registered, Laravel will throw a normal 404 error.
 
 ### One Master View
 
-If you load views in a fallback locale then it is probably a good idea to let all of your pages extend one site-wide master view that you translate with Laravel's localization feature (see below). This way, your visitors can still navigate in the requested language and only the actual content is in the fallback language.
+If you load views in a fallback language then it is probably a good idea to let all of your pages extend one site-wide master view that you translate with [Laravel's localization](http://laravel.com/docs/5.0/localization) feature. This way, your visitors can still navigate in the requested language and only the actual content is in the unexpected language.
+
+### Disable Fallback Locales
+
+Maybe you don't want to present views in a fallback language to your visitors, but instead you want to catch an exception if neither the unprefixed view nor a version for the requested locale exists. Then you could redirect to a custom error page or whatever.
+
+You can do this in two ways.
+
+If you want to apply this to all localized routes, then you can set an options array as the first parameter of the `routes` function. The default value of `skipFallback` is `false`.
+
+    ViewFinder::routes(['skipFallback' => true], function()
+    {
+        // Your routes here!
+    });
+
+But you can still overrule this when you call `ViewFinder::make()` and set this option per view. Simply add a boolean as the 4th argument:
+
+    return ViewFinder::make('some.view', [], [], true);  // Look for fallbacks
+    return ViewFinder::make('some.view', [], [], false); // Don't look for fallbacks
+
+> The two arrays are passed to Laravel's `View::make()`.
+
+### View Not Found
+
+Whenever a view is missing, a `CodeZero\ViewFinder\ViewNotFoundException` will be thrown.
 
 ## Laravel's Localization
 
-Our `users.create` view from the example has a localized route (`example.com/en/users/create`) but not a localized view. ViewFinder will first check if an unprefixed version of the requested view exists and load it.
+You might have views that only contain some labels and very little text. Forms for example. 
 
-The user's create page can still be translated with [Laravel's localization](http://laravel.com/docs/5.0/localization) feature since it doesn't have much static content (just labels etc.).
+If you scroll up a bit, you'll see that our `users.create` view has a localized route (`example.com/en/users/create`) but not a localized view. ViewFinder will first check if an unprefixed version of the requested view exists and in this case it finds it and loads it.
+
+This page can be translated with [Laravel's localization](http://laravel.com/docs/5.0/localization) feature since it doesn't have much static content (just labels etc.).
 
 ---
 [![Analytics](https://ga-beacon.appspot.com/UA-58876018-1/codezero-be/viewfinder)](https://github.com/igrigorik/ga-beacon)

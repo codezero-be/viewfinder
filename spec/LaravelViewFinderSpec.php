@@ -23,7 +23,7 @@ class LaravelViewFinderSpec extends ObjectBehavior {
     function it_searches_for_a_view(Localizer $localizer, ViewFactory $viewFactory)
     {
         $localizer->getLocales()->shouldBeCalled()->willReturn(self::$LOCALES);
-        $localizer->getRequestedLocale()->shouldBeCalled()->willReturn('en');
+        $localizer->isRequestedLocaleValid()->shouldBeCalled()->willReturn(true);
 
         $viewFactory->exists('view')->shouldBeCalled()->willReturn(false);
         $viewFactory->exists('nl.view')->shouldBeCalled()->willReturn(false);
@@ -36,8 +36,7 @@ class LaravelViewFinderSpec extends ObjectBehavior {
 
     function it_returns_a_regular_view_if_no_locale_is_specified(Localizer $localizer, ViewFactory $viewFactory)
     {
-        $localizer->getLocales()->shouldBeCalled()->willReturn(self::$LOCALES);
-        $localizer->getRequestedLocale()->shouldBeCalled()->willReturn('somePage');
+        $localizer->isRequestedLocaleValid()->shouldBeCalled()->willReturn(false);
 
         $viewFactory->exists('view')->shouldBeCalled()->willReturn(true);
         $viewFactory->exists('nl.view')->shouldNotBeCalled();
@@ -50,8 +49,7 @@ class LaravelViewFinderSpec extends ObjectBehavior {
 
     function it_throws_up_if_no_matching_view_could_be_found(Localizer $localizer, ViewFactory $viewFactory)
     {
-        $localizer->getLocales()->shouldBeCalled()->willReturn(self::$LOCALES);
-        $localizer->getRequestedLocale()->shouldBeCalled()->willReturn('somePage');
+        $localizer->isRequestedLocaleValid()->shouldBeCalled()->willReturn(false);
 
         $viewFactory->exists('view')->shouldBeCalled()->willReturn(false);
         $viewFactory->exists('nl.view')->shouldNotBeCalled();
@@ -62,13 +60,27 @@ class LaravelViewFinderSpec extends ObjectBehavior {
         $this->shouldThrow('CodeZero\ViewFinder\ViewNotFoundException')->duringMake('view');
     }
 
-    function it_registers_a_route_group_with_the_locale_as_prefix(Localizer $localizer, Router $router)
+    function it_throws_up_if_fallback_views_are_disabled(Localizer $localizer, ViewFactory $viewFactory)
     {
+        $localizer->getRequestedLocale()->shouldBeCalled()->willReturn('nl');
         $localizer->isRequestedLocaleValid()->shouldBeCalled()->willReturn(true);
-        $localizer->getLocale()->shouldBeCalled()->willReturn('en');
 
-        $router->group(['prefix' => 'en'], Argument::type('callable'))->shouldBeCalled();
-        $this->routes(Argument::type('callable'));
+        $viewFactory->exists('view')->shouldBeCalled()->willReturn(false);
+        $viewFactory->exists('nl.view')->shouldBeCalled()->willReturn(false);
+        $viewFactory->exists('en.view')->shouldNotBeCalled();
+        $viewFactory->exists('fr.view')->shouldNotBeCalled();
+
+        $viewFactory->make('view', [], [])->shouldNotBeCalled();
+        $this->shouldThrow('CodeZero\ViewFinder\ViewNotFoundException')->duringMake('view', [], [], true);
     }
+
+//    function it_registers_a_route_group_with_the_locale_as_prefix(Localizer $localizer, Router $router)
+//    {
+//        $localizer->isRequestedLocaleValid()->shouldBeCalled()->willReturn(true);
+//        $localizer->getLocale()->shouldBeCalled()->willReturn('en');
+//
+//        $router->group(['prefix' => 'en'], Argument::type('callable'))->shouldBeCalled();
+//        $this->routes(Argument::type('callable'));
+//    }
 
 }
