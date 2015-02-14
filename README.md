@@ -1,9 +1,9 @@
 # Laravel 5 Localized View Finder
 
-[![Build Status](https://travis-ci.org/codezero-be/viewfinder.svg?branch=master)](https://travis-ci.org/codezero-be/viewfinder)
-[![Latest Stable Version](https://poser.pugx.org/codezero/viewfinder/v/stable.svg)](https://packagist.org/packages/codezero/viewfinder)
-[![Total Downloads](https://poser.pugx.org/codezero/viewfinder/downloads.svg)](https://packagist.org/packages/codezero/viewfinder)
-[![License](https://poser.pugx.org/codezero/viewfinder/license.svg)](https://packagist.org/packages/codezero/viewfinder)
+[![Build Status](https://img.shields.io/travis/codezero-be/viewfinder.svg?branch=master)](https://travis-ci.org/codezero-be/viewfinder)
+[![Packagist](https://img.shields.io/packagist/v/codezero/viewfinder.svg)](https://packagist.org/packages/codezero/viewfinder)
+[![Total Downloads](https://img.shields.io/packagist/dt/codezero/viewfinder.svg)](https://packagist.org/packages/codezero/viewfinder)
+[![License](https://img.shields.io/packagist/l/codezero/viewfinder.svg)](https://packagist.org/packages/codezero/viewfinder)
 
 This package allows you to easily create [route structures](#localized-routing) for a multi language site. It also provides a convenient way to automatically find and return a [localized version](#load-a-view) of a view.
 
