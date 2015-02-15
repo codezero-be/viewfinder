@@ -74,13 +74,13 @@ class LaravelViewFinderSpec extends ObjectBehavior {
         $this->shouldThrow('CodeZero\ViewFinder\ViewNotFoundException')->duringMake('view', [], [], true);
     }
 
-//    function it_registers_a_route_group_with_the_locale_as_prefix(Localizer $localizer, Router $router)
-//    {
-//        $localizer->isRequestedLocaleValid()->shouldBeCalled()->willReturn(true);
-//        $localizer->getLocale()->shouldBeCalled()->willReturn('en');
-//
-//        $router->group(['prefix' => 'en'], Argument::type('callable'))->shouldBeCalled();
-//        $this->routes(Argument::type('callable'));
-//    }
+    function it_registers_a_route_group_with_the_locale_as_prefix(Localizer $localizer, Router $router)
+    {
+        $localizer->isRequestedLocaleValid()->shouldBeCalled()->willReturn(true);
+        $localizer->getLocale()->shouldBeCalled()->willReturn('en');
+
+        $router->group(['prefix' => 'en'], Argument::type('callable'))->shouldBeCalled();
+        $this->routes(function(){});
+    }
 
 }
